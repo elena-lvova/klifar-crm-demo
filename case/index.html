@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Клинический случай: лечение вестибулярного нейронита · StopVertigo</title>
+<link rel="icon" href="../assets/favicon.png">
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+body{background:#eceeec;margin:0;font-family:Rubik,system-ui,sans-serif;color:#1d2939}
+.cs-w{max-width:1000px;margin:0 auto;padding:22px 16px 40px}
+.cs-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}.cs-top .sp{flex:1}
+.cs-top .sv-logo{color:#14875a}.cs-top small{color:#667085;font-size:12px}
+.cs-prog{height:4px;background:#d7dcd8;border-radius:4px;overflow:hidden;margin-bottom:14px}.cs-prog i{display:block;height:100%;background:#14875a;transition:width .3s}
+.slide{position:relative;border-radius:22px;overflow:hidden;min-height:540px;padding:44px 48px 64px;background:#2f8f66 url(../assets/img/swirl.jpg) right center/cover no-repeat;background-blend-mode:soft-light;color:#fff}
+.slide.light{background-color:#f1f1f1;background-blend-mode:normal;color:#1d2939}
+.slide h1{font-size:40px;line-height:1.15;color:#14875a;margin:120px 0 0;max-width:560px}
+.slide .kick{font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:#14875a;display:inline-block;padding:6px 12px;border-radius:8px}
+.slide h2{font-size:26px;margin:0 0 20px}
+.slide .src{position:absolute;left:48px;right:48px;bottom:18px;font-size:11.5px;opacity:.8;line-height:1.4}
+.panel{background:#f8f7f8;color:#1d2939;border-radius:20px;padding:26px 30px;max-width:860px}
+.panel h3{color:#14875a;font-size:20px;text-transform:uppercase;margin:0 0 12px}
+.panel ul{margin:0;padding-left:20px}.panel li{margin:6px 0;line-height:1.5;font-size:15.5px}
+.panel li::marker{color:#14875a}
+.bar{background:#14875a;color:#fff;border-radius:18px;padding:18px 26px;font-size:22px;font-weight:600;margin-bottom:16px;max-width:860px}
+.opts{display:grid;gap:10px;margin-top:6px}
+.opt{display:flex;gap:12px;align-items:center;background:#fff;border:2px solid #dfe5e1;border-radius:14px;padding:14px 16px;font-size:16px;cursor:pointer;text-align:left;color:#1d2939;font-family:inherit}
+.opt:hover{border-color:#14875a}.opt b{flex:none;width:28px;height:28px;border-radius:50%;background:#e7f4ed;color:#14875a;display:grid;place-items:center;font-size:13px}
+.opt.ok{border-color:#16a34a;background:#f0fdf4}.opt.bad{border-color:#dc2626;background:#fef2f2}.opt[disabled]{cursor:default}
+.fb{margin-top:14px;display:none}.fb.on{display:block}
+.fb .verdict{font-weight:700;font-size:17px;margin-bottom:8px}.fb .verdict.ok{color:#15803d}.fb .verdict.bad{color:#b91c1c}
+.res{margin-top:12px;background:#e7f4ed;border-radius:12px;padding:12px 16px;font-size:15px}
+.nav{display:flex;align-items:center;gap:10px;margin-top:14px}.nav .sp{flex:1}
+.nb{border:0;border-radius:999px;padding:12px 22px;font:600 13px Rubik,system-ui;letter-spacing:.03em;cursor:pointer;background:#fff;color:#0f2a1f}
+.nb.pr{background:#14875a;color:#fff}.nb[disabled]{opacity:.4;cursor:default}
+.cnt{font-size:13px;color:#667085}
+.score{font-size:46px;font-weight:700;color:#14875a;margin:6px 0}
+@media (max-width:700px){.slide{padding:28px 20px 70px;min-height:600px;background-position:62% center}.slide h1{font-size:30px;margin-top:80px}.slide .src{left:20px;right:20px}}
+</style>
+</head>
+<body>
+<div class="cs-w">
+  <div class="cs-top"><span class="sv-logo"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" style="width:34px;height:34px"><path d="M20 20a3.5 3.5 0 1 1 3.5 3.5A7 7 0 1 1 30.5 16.5 10.5 10.5 0 1 1 13 30"/></svg><b style="font-size:17px;line-height:1.02">STOP<br>VERTIGO</b></span><span class="sp"></span><small>Образовательный проект для неврологов · материал для специалистов здравоохранения</small></div>
+  <div class="cs-prog"><i id="pg"></i></div>
+  <div id="slide"></div>
+  <div class="nav"><button class="nb" id="prev">← Назад</button><span class="sp"></span><span class="cnt" id="cnt"></span><span class="sp"></span><button class="nb pr" id="next">Далее →</button></div>
+</div>
+<script>
+(function () {
+  const SRC = 'Адаптировано из статьи: Воронов В.А. Лечение вестибулярного нейронита // Лекарственные средства и рациональная фармакотерапия. 2022; 4_1(5): 29–30. DOI: 10.56356/27827259_2022_05_01_29';
+  const ul = a => '<ul>' + a.map(x => `<li>${x}</li>`).join('') + '</ul>';
+  const S = [
+    { light: true, html: `<span class="kick">Клинический случай</span><h1>Лечение вестибулярного нейронита</h1><p style="max-width:520px;margin-top:18px;font-size:16px">Пациентка 21 года с острым системным головокружением и снижением слуха. Три вопроса по ходу случая, около 8 минут.</p>`, src: '<b>' + SRC.replace(': ', ':</b> ') },
+    { light: true, html: `<div class="bar">Головокружение — частая жалоба у пациентов разного возраста</div><div class="panel">${ul(['До 5–10% пациентов, обратившихся к врачу общей практики, и до 10–20% пациентов, пришедших к неврологу, жалуются именно на головокружение [1].', 'Хотя бы раз в течение жизни головокружение испытывают 20–30% людей; ежегодно головокружение возникает у 4,9% людей [1].', 'Головокружение — субъективный симптом, который сопровождает течение целого ряда заболеваний различных органов и систем организма [2].'])}</div>`, src: '1. Замерград М.В. Возрастные аспекты головокружений // Неврологический журнал. 2014. №3.<br>2. Веселаго О.В. Алгоритм диагностики головокружения // Нервные болезни. 2009. №3.' },
+    { html: `<h2>Пациентка, 21 год</h2><div class="panel"><h3>Жалобы при обращении</h3>${ul(['Выраженное системное головокружение в любом положении головы, усиливающееся при попытке движения, перемене положения тела.', 'Шум в правом ухе по типу звона.', 'Снижение слуха на правое ухо.'])}</div>`, src: SRC },
+    { html: `<h2>Пациентка, 21 год</h2><div class="panel"><h3>Анамнез заболевания</h3>${ul(['Заболела 5 дней назад (2 недели назад перенесла коронавирусную инфекцию).', 'В первый день вызвала скорую помощь, внутримышечно введён противорвотный препарат. Состояние не улучшилось, через 2 часа доставлена в неврологический стационар: осмотр невролога, КТ головного мозга (данных за ОНМК не получено), отпущена под амбулаторное наблюдение.', 'Назначен бетагистин. Состояние не улучшается, но тошнота снизилась.'])}<h3 style="margin-top:18px">Анамнез жизни</h3>${ul(['Работает медицинской сестрой.', 'Сахарный диабет 1-го типа (получает инсулин).', 'Вредных привычек нет.'])}</div>`, src: SRC },
+    { html: `<h2>Пациентка, 21 год</h2><div class="panel"><h3>Неврологический статус</h3>${ul(['Ходит, широко расставляя ноги, заносит вправо.', 'Спонтанный горизонтальный нистагм влево II степени, подчиняется закону Александера. В очках Френзеля усиливается до III степени, при фиксации взора уменьшается до I. Импульс-тест положителен вправо.', 'Разворот в пробе Унтербергера вправо на 90°, проба выполнима только с поддержкой.', 'В пробе Ромберга диффузно неустойчива, шаткость усиливается при закрытых глазах.', 'Позиционные пробы Дикса–Холлпайка, МакКлюра–Паганини и Воронова–Бабияка — данных за ДППГ нет.', 'Плавное слежение и саккады не нарушены.', 'Аудиометрически — снижение слуха справа до 3-й степени по типу звуковосприятия.'])}</div>`, src: SRC },
+    { q: { t: 'Вопрос 1. Какие обследования нужно провести для подтверждения диагноза?', o: ['Калорические пробы', 'МРТ головного мозга', 'Калорические пробы и МРТ'], ok: 0,
+      fb: ul(['Диагноз вестибулярного нейронита основывается на клинической картине, результатах отоневрологического обследования и исключении других заболеваний.', 'Диагноз подтверждается калорической пробой, выявляющей вестибулярную гипо- или арефлексию на стороне поражения.', 'КТ и МРТ не обязательны при типичной клинической картине; МРТ рекомендуется, если у пациента есть факторы риска инсульта и симптомы не разрешаются в течение 48 часов.']) + '<div class="res"><b>Результаты:</b> слева калорический ответ нормальный, справа ни в тепловой, ни в холодовой пробе ответа нет — 100% гипорефлексия справа.</div>' }, src: 'Парфенов В.А. Вестибулярный нейронит // Медицинский совет. 2021;(2):31–36.' },
+    { html: `<h2>Пациентка, 21 год</h2><div class="panel"><h3>Диагноз</h3><p style="font-size:16px;line-height:1.55;margin:0 0 10px"><b>H81.2</b> — Вестибулярный нейронит справа, стадия подавления (сочетание вестибулярного нейронита сосудистой этиологии и острой сенсоневральной тугоухости на одно ухо со значимой потерей слуха).</p><p style="font-size:16px;line-height:1.55;margin:0"><b>H90.4</b> — Острая правосторонняя сенсоневральная тугоухость. Субъективный ушной шум.</p></div>`, src: SRC },
+    { light: true, html: `<div class="bar">Диагностика основывается на типичной клинической картине</div><div class="panel">${ul(['Острое и относительно длительное (от нескольких часов до нескольких суток) вестибулярное головокружение с неустойчивостью, горизонтальным или горизонтально-ротаторным спонтанным нистагмом, осциллопсией, тошнотой и рвотой [1, 2].', 'Заболеванию может предшествовать респираторная вирусная инфекция [2].', 'Симптомов поражения ствола или других отделов головного мозга нет [2].', 'Характерно соответствие нистагма закону Александера [1].', 'Диагноз подтверждают видеонистагмография, тест импульсного движения головой, шагающая проба Фукуда и калорическая проба [1, 3].'])}</div>`, src: '1. Самарцев И.Н., Живолупов С.А. Современные представления о вестибулярном нейроните // Известия Российской военно-медицинской академии. 2020. Т. 39, № S3-2.<br>2. Замерград М.В. Вестибулярный нейронит // РМЖ. 2008. Т. 16, № 12.  3. Демина К.А., Никитенко П.С. // Архивъ внутренней медицины. 2017. №5 (37).' },
+    { q: { t: 'Вопрос 2. С какими заболеваниями следует проводить дифференциальную диагностику вестибулярного нейронита?', o: ['Острое нарушение мозгового кровообращения', 'Доброкачественное пароксизмальное позиционное головокружение', 'Болезнь Меньера', 'Новообразования', 'Все ответы верные'], ok: 4,
+      fb: ul(['Лечение вестибулярного нейронита складывается из симптоматической терапии, направленной на уменьшение головокружения, тошноты и рвоты, и вестибулярной реабилитации, которая ускоряет компенсацию [1].', 'Метилпреднизолон в первые трое суток повышает частоту восстановления вестибулярной функции через год [2].', 'Противогерпетические препараты (отдельно или с метилпреднизолоном) восстановление не улучшают [2].']) }, src: '1. Baloh R.W. Clinical practice. Vestibular neuritis // N Engl J Med. 2003;348(11):1027–32.<br>2. Замерград М.В. Возрастные аспекты головокружений // Неврологический журнал. 2014. №3.' },
+    { html: `<h2>Пациентка, 21 год</h2><div class="panel"><h3>Лечение</h3>${ul(['Лечение стационарное.', 'В связи с сахарным диабетом 1-го типа классическая терапия кортикостероидами невозможна.', 'Назначены сосудистая и метаболическая терапия, бетагистин 24 мг 2 раза в день.'])}<h3 style="margin-top:18px">Повторный осмотр через 10 дней</h3>${ul(['Спонтанный нистагм влево 0–I степени, при фиксации взора исчезает; импульс-тест сомнительный.', 'Разворот в пробе Унтербергера — 20°; в пробе Ромберга устойчива.', 'Слух справа улучшился до 2-й степени тугоухости; шум тише и ниже по частоте.', 'Гипорефлексия справа по калорической пробе — 67%: выше нормы, но для 10 дней терапии это очень хороший результат.'])}</div>`, src: SRC },
+    { q: { t: 'Вопрос 3. Что важнее всего для восстановления на амбулаторном этапе?', o: ['Продолжать вестибулярные супрессанты до полного исчезновения головокружения', 'Как можно раньше начать вестибулярную реабилитацию', 'Строгий постельный режим до полного восстановления'], ok: 1,
+      fb: ul(['Повреждения периферической вестибулярной системы, как правило, хорошо компенсируются; сохранность центральных механизмов компенсации повышает вероятность полного исчезновения головокружения и неустойчивости.', 'Эффективность компенсации значительно повышает вестибулярная гимнастика. Чем раньше начата реабилитация, тем она эффективнее.', 'Длительный приём вестибулярных супрессантов и ограничение движений замедляют компенсацию.']) }, src: 'Замерград М.В. Возрастные аспекты головокружений // Неврологический журнал. 2014. №3.' },
+    { light: true, end: true },
+  ];
+  const A = {}; let i = 0;
+  const el = document.getElementById('slide');
+  function draw() {
+    const s = S[i];
+    let h = '';
+    if (s.q) {
+      const a = A[i];
+      h = `<div class="bar" style="font-size:20px">${s.q.t}</div><div class="panel"><div class="opts">${s.q.o.map((o, k) => `<button class="opt ${a != null ? (k === s.q.ok ? 'ok' : k === a ? 'bad' : '') : ''}" data-o="${k}" ${a != null ? 'disabled' : ''}><b>${'АБВГД'[k]}</b>${o}</button>`).join('')}</div>
+        <div class="fb ${a != null ? 'on' : ''}"><div class="verdict ${a === s.q.ok ? 'ok' : 'bad'}">${a === s.q.ok ? 'Вы ответили правильно' : 'Вы ответили неправильно'} · верно: ${s.q.o[s.q.ok]}</div>${s.q.fb}</div></div>`;
+    } else if (s.end) {
+      const qs = S.map((x, k) => x.q ? k : -1).filter(k => k >= 0); const ok = qs.filter(k => A[k] === S[k].q.ok).length;
+      h = `<span class="kick">Итог</span><div class="panel" style="margin-top:60px;max-width:560px"><div>Ваш результат</div><div class="score">${ok} из ${qs.length}</div><p style="font-size:15px;line-height:1.55;margin:0">Вестибулярный нейронит — диагноз клинический: острое длительное головокружение, нистагм по закону Александера, положительный импульс-тест и отсутствие стволовой симптоматики. Подтверждение — калорическая проба. Ключ к восстановлению — ранняя вестибулярная реабилитация.</p><p style="margin:14px 0 0;font-size:13px;color:#667085">За прохождение случая начислено 2 балла проекта.</p></div>`;
+    } else h = s.html;
+    el.innerHTML = `<div class="slide ${s.light ? 'light' : ''}">${h}${s.src ? `<div class="src">${s.src}</div>` : ''}</div>`;
+    el.querySelectorAll('[data-o]').forEach(b => b.addEventListener('click', () => { A[i] = +b.dataset.o; draw(); }));
+    document.getElementById('pg').style.width = ((i + 1) / S.length * 100) + '%';
+    document.getElementById('cnt').textContent = `${i + 1} / ${S.length}`;
+    document.getElementById('prev').disabled = i === 0;
+    const nx = document.getElementById('next');
+    nx.disabled = !!(s.q && A[i] == null); nx.textContent = i === S.length - 1 ? 'Пройти заново' : (s.q && A[i] == null ? 'Выберите ответ' : 'Далее →');
+  }
+  document.getElementById('prev').onclick = () => { if (i > 0) { i--; draw(); } };
+  document.getElementById('next').onclick = () => { if (i === S.length - 1) { for (const k in A) delete A[k]; i = 0; } else i++; draw(); window.scrollTo(0, 0); };
+  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' && !document.getElementById('next').disabled) document.getElementById('next').click(); if (e.key === 'ArrowLeft') document.getElementById('prev').click(); });
+  draw();
+})();
+</script>
+</body>
+</html>

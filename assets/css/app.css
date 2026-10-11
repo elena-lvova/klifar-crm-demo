@@ -355,3 +355,24 @@ a.tpl:hover{text-decoration:underline}
 table.emrep tr.em-m0 td{background:#f8faff;border-top:1px dashed #dbe4f5;font-size:13px}
 table.emrep tr.em-s td:nth-child(3){padding-left:22px}
 table.emrep tr.tot.sub td{font-weight:500;background:#fff;border-top:1px dashed var(--line);font-size:13px}
+/* письма в стиле проекта */
+.em-prev.sv{background:#ececea;border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:600px;margin:0 auto;font-size:14px;line-height:1.5;color:#1d2939}
+.sv .em-top{background:#ececea right -60px top -40px/380px auto no-repeat;padding:30px 30px 26px;min-height:120px}
+.sv-logo{display:inline-flex;align-items:center;gap:8px;color:#14875a}
+.sv-logo svg{width:34px;height:34px}.sv-logo b{font-size:17px;line-height:1.02;letter-spacing:.02em;font-weight:700}
+.sv .em-hi{margin:26px 0 0;font-size:15px;font-weight:600}
+.sv .em-green{background:#2f8f66;background:linear-gradient(180deg,#2c8a61,#3d9b72);border-radius:26px 26px 26px 26px;margin:0 0 18px;padding:26px 26px 22px;color:#fff}
+.sv .em-lead{margin:0 0 16px}.sv .em-note{margin:16px 0 0;font-size:13px;font-weight:500}
+.sv .em-card{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.75);border-radius:22px;padding:20px 22px;margin-top:14px;color:#0f2a1f}
+.sv .em-card p,.sv .em-card li{color:#0f2a1f;font-size:13px}.sv .em-card ul{margin:4px 0 0 18px;padding:0}
+.sv .em-ck{display:flex;align-items:center;gap:10px;margin-bottom:12px}.sv .em-ck svg{width:30px;height:30px;color:#fff}.sv .em-ck span{font-size:19px;font-weight:700;color:#0f2a1f}
+.sv .em-ct{font-weight:700;margin-bottom:6px;font-size:14px}
+.sv .em-dl p{margin:0 0 4px}.sv .em-dl b,.sv .em-card>p>b{color:#0f2a1f}
+.sv .em-it{font-style:italic;opacity:.85}.sv .em-sp{margin:0 0 6px}
+.sv .em-btn{display:inline-flex;align-items:center;gap:14px;background:#fff;color:#0f2a1f!important;border-radius:999px;padding:13px 24px;font-weight:700;font-size:12px;letter-spacing:.02em;margin-top:14px;cursor:pointer;text-decoration:none}
+.sv .em-btn i{font-style:normal;color:#14875a;font-size:17px}
+.sv .em-btn.lt{background:#14875a;color:#fff!important}.sv .em-btn.lt i{color:#fff}
+.sv .em-cert{display:flex;gap:16px;align-items:center;margin:0 18px 18px;border:1.5px solid #2c8a61;border-radius:22px;background:#fff;padding:20px 22px;font-size:13px}
+.sv .em-cert p{margin:0}.sv .em-cert-ic{flex:none;width:64px;height:64px;border-radius:50%;background:#e7f4ed;display:grid;place-items:center;color:#14875a}.sv .em-cert-ic svg{width:32px;height:32px}
+.sv .em-foot{background:#3a3a3f;color:#9a9aa3;text-align:center;padding:22px 20px 18px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px}
+.sv .em-foot .sv-logo{color:#3fbf86}.sv .em-foot span{letter-spacing:.14em;text-transform:uppercase;color:#e4e4e7;font-size:11px;margin-top:6px}
