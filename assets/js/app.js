@@ -89,7 +89,6 @@
     S.notif[1].t = `Волна 4: выполнено ${Math.round(w4 / 6400 * 100)}% плана визитов`;
     S.notif[3].t = `Вебинар 20.11: ${fmt(DB.doctors.filter(d => d.webinars[3]).length)} участников`;
   })();
-  try { S.auth = sessionStorage.getItem('sv_auth') === '1'; } catch (e) {}
 
   // ---------- charts registry ----------
   const charts = [];
@@ -253,7 +252,7 @@
       const n = S.notif.find(x => x.id === +el.dataset.notif); n.unread = false; location.hash = n.go;
     }));
     const ra = $('[data-act="readall"]'); ra && ra.addEventListener('click', e => { e.stopPropagation(); S.notif.forEach(n => (n.unread = false)); render(); });
-    const lo = $('[data-act="logout"]'); lo && lo.addEventListener('click', () => { S.auth = false; try { sessionStorage.removeItem('sv_auth'); } catch (e) {} audio.pause(); location.hash = '#/login'; });
+    const lo = $('[data-act="logout"]'); lo && lo.addEventListener('click', () => { S.auth = false; audio.pause(); location.hash = '#/login'; });
     const pr = $('[data-act="profile"]'); pr && pr.addEventListener('click', () => modal(`<div class="mh"><h3>Профиль и доступы</h3><button class="ibtn" data-close>${ic('x')}</button></div>
       <div class="mb"><div class="mini" style="margin-bottom:10px"><div class="l">Пользователь</div><div class="v">demo@stopvertigo-client.ru</div></div>
       <div class="mini" style="margin-bottom:10px"><div class="l">Роль</div><div class="v">Бренд-менеджер · чтение и выгрузка</div></div>
@@ -294,7 +293,7 @@
       </div></div>`;
     $('#lf').addEventListener('submit', e => {
       e.preventDefault(); const b = $('#lb'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Вход…';
-      setTimeout(() => { S.auth = true; try { sessionStorage.setItem('sv_auth', '1'); } catch (er) {} location.hash = '#/dashboard'; }, 700);
+      setTimeout(() => { S.auth = true; location.hash = '#/dashboard'; }, 700);
     });
   }
 
