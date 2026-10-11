@@ -49,15 +49,15 @@
 
   const OPERATORS = [
     { id: 1, name: 'Ковалёва А.', full: 'Ковалёва Анна', g: 'F', q: 1.08 },
-    { id: 2, name: 'Ершов Д.', full: 'Ершов Денис', g: 'M', q: 1.04 },
+    { id: 2, name: 'Ершова Д.', full: 'Ершова Дарья', g: 'F', q: 1.04 },
     { id: 3, name: 'Савина М.', full: 'Савина Мария', g: 'F', q: 0.92 },
     { id: 4, name: 'Гришина Е.', full: 'Гришина Елена', g: 'F', q: 1.0 },
     { id: 5, name: 'Тарасова О.', full: 'Тарасова Ольга', g: 'F', q: 0.98 },
-    { id: 6, name: 'Беляев К.', full: 'Беляев Кирилл', g: 'M', q: 0.95 },
+    { id: 6, name: 'Белякова К.', full: 'Белякова Ксения', g: 'F', q: 0.95 },
     { id: 7, name: 'Николаева И.', full: 'Николаева Ирина', g: 'F', q: 1.02 },
     { id: 8, name: 'Фомина Т.', full: 'Фомина Татьяна', g: 'F', q: 0.97 },
     { id: 9, name: 'Зуева Л.', full: 'Зуева Людмила', g: 'F', q: 1.01 },
-    { id: 10, name: 'Крылов А.', full: 'Крылов Артём', g: 'M', q: 0.94 },
+    { id: 10, name: 'Крылова А.', full: 'Крылова Алина', g: 'F', q: 0.94 },
     { id: 11, name: 'Морозова В.', full: 'Морозова Вера', g: 'F', q: 1.03 },
     { id: 12, name: 'Лебедева Н.', full: 'Лебедева Наталья', g: 'F', q: 0.99 },
   ];
@@ -243,9 +243,13 @@
   });
   // длительность визита = длина записи разговора (± ожидание соединения)
   const AM = window.AUDIO_META || {};
+  // ответы, которые звучат в записях
+  const AUDIO_ANS = { A: { q1: 2, q2: [0, 2], q3: 0 }, B: { q1: 1, q2: [0, 2], q3: 1 }, C: { q1: 2, q2: [0, 2], q3: 0 }, D: { q1: 3, q2: [0, 1, 2], q3: 2 } };
   const pinned = new Set([bel.fio, ...showcase.map(s => s[0])]);
   visits.forEach(v => {
-    v.audio = (v.wave <= 2 ? 'w2_' : 'w4_') + (v.op.g + v.doc.g).toLowerCase();
+    // 4 варианта записи: волны 1–2 / 3–4 × врач-женщина / врач-мужчина
+    v.audio = 'v_' + (v.wave <= 2 ? (v.doc.g === 'F' ? 'A' : 'B') : (v.doc.g === 'F' ? 'C' : 'D'));
+    if (pinned.has(v.doc.fio) && v.status === 'done' && v.survey) v.survey = AUDIO_ANS[v.audio.slice(2)];
     if (v.status === 'done') {
       const base = AM[v.audio] || 160;
       v.dur = Math.round(base + (pinned.has(v.doc.fio) && v.date.getFullYear() === 2025 && (v.doc === bel || v.wave === 2) ? 0 : (R() - 0.5) * 34));
