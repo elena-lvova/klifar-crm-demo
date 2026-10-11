@@ -250,6 +250,7 @@
     // 4 варианта записи: волны 1–2 / 3–4 × врач-женщина / врач-мужчина
     v.audio = 'v_' + (v.wave <= 2 ? (v.doc.g === 'F' ? 'A' : 'B') : (v.doc.g === 'F' ? 'C' : 'D'));
     if (pinned.has(v.doc.fio) && v.status === 'done' && v.survey) v.survey = AUDIO_ANS[v.audio.slice(2)];
+    if (v.doc === bel && v.wave >= 3) v.op = OPERATORS[2]; // в записи C — другой оператор
     if (v.status === 'done') {
       const base = AM[v.audio] || 160;
       v.dur = Math.round(base + (pinned.has(v.doc.fio) && v.date.getFullYear() === 2025 && (v.doc === bel || v.wave === 2) ? 0 : (R() - 0.5) * 34));
