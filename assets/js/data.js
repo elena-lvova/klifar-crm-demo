@@ -283,6 +283,7 @@
     EMAILS.push({ n: i + 1, date, subject: subj[i], sent: 0, opens: 0, clicks: 0 });
   }
   EMAILS[20].date = new Date(2025, 10, 13, 8, 0);
+  EMAILS[23].date = new Date(2025, 11, 19, 8, 0);
   const EF = [1.08, 1.12, 1.18, 0.96, 1.04, 1.1, 0.92, 0.98, 1.15, 1.02, 0.9, 0.94, 0.86, 0.9, 0.97, 1.06, 1.19, 1.0, 1.05, 1.08, 1.21, 1.03, 0.88, 0.95];
   const CF = [1.0, 1.2, 1.35, 0.9, 1.05, 1.15, 1.1, 0.95, 1.3, 1.0, 0.95, 0.9, 0.85, 1.1, 1.0, 1.05, 1.4, 0.95, 1.1, 1.2, 1.45, 1.15, 0.8, 0.9];
   const OR_K = 0.853; // калибровка: OR по проекту ≈ 14,8%
@@ -298,6 +299,38 @@
       if (o0) { const cu = R(); if (!o) continue; e.opens++; d.opens++; c = cu < 0.235 * CF[i]; if (c) { e.clicks++; d.clicks++; } }
       if (o) d.emailWaves.push([i, c ? 2 : 1]);
     }
+  });
+  // ---------- отчёт по рассылкам: шаблоны, ссылки, догонялки ----------
+  const RE = rng(9157);
+  const LINKSETS = {
+    invite: [['Зарегистрироваться', 'webinar/register', .55], ['Программа и спикер', 'webinar/program', .17], ['Добавить в календарь', 'webinar/ics', .12], ['Материалы проекта', 'materials', .10], ['Записи прошлых вебинаров', 'webinars', .06]],
+    record: [['Смотреть запись', 'webinar/record', .58], ['Презентация спикера (PDF)', 'webinar/slides', .18], ['Ответы на вопросы из чата', 'webinar/qa', .12], ['Следующий вебинар', 'webinar/next', .12]],
+    case: [['Открыть разбор', 'case', .60], ['Скачать PDF', 'case/pdf', .16], ['Другие клинические разборы', 'cases', .14], ['Задать вопрос эксперту', 'expert', .10]],
+    video: [['Смотреть видео', 'video', .62], ['Памятка для пациента', 'patient/memo', .20], ['Все материалы', 'materials', .18]],
+    memo: [['Скачать', 'download', .58], ['Версия для печати', 'print', .22], ['Все материалы', 'materials', .20]],
+    article: [['Читать полностью', 'article', .60], ['Скачать PDF', 'article/pdf', .18], ['Связанные материалы', 'related', .12], ['Все материалы проекта', 'materials', .10]],
+    digest: [['Главное за год', 'digest', .36], ['Записи вебинаров', 'webinars', .26], ['Клинические разборы', 'cases', .22], ['Памятки пациентам', 'patient', .16]],
+  };
+  const emType = t => /^Приглашение/.test(t) ? 'invite' : /^(Запись|Итоги вебинара)/.test(t) ? 'record' : /^Клинический разбор/.test(t) ? 'case' : /^Видео/.test(t) ? 'video' : /^(Памятка|Шкала)/.test(t) ? 'memo' : /(дайджест|Итоги года)/.test(t) ? 'digest' : 'article';
+  const reSubj = (t, ty) => ty === 'invite' ? 'Остались места: ' + t.replace('Приглашение на вебинар', 'вебинар') : ty === 'record' ? 'Не успели на эфир? ' + t : ty === 'case' ? 'Разбор недели: ' + t.replace('Клинический разбор: ', '') : ty === 'digest' ? 'Напоминаем: ' + t : 'Вы могли пропустить: ' + t;
+  const splitLinks = (set, total, jit) => {
+    const w = set.map(l => l[2] * (1 + (RE() - 0.5) * jit)); const sw = w.reduce((a, b) => a + b, 0);
+    const out = set.map((l, j) => ({ name: l[0], path: l[1], clicks: Math.round(total * w[j] / sw) }));
+    return out;
+  };
+  EMAILS.forEach((e, i) => {
+    const ty = emType(e.subject); e.type = ty;
+    e.tpl = 'SV-EM-' + String(e.n).padStart(2, '0');
+    e.camp = 'sv-em-' + String(e.n).padStart(2, '0');
+    e.unsub = Math.round(e.sent * (0.0008 + RE() * 0.0009));
+    e.bounce = Math.round(e.sent * (0.006 + RE() * 0.005));
+    e.links = splitLinks(LINKSETS[ty], e.clicks * (1.18 + RE() * 0.17), 0.25);
+    const rd = new Date(e.date.getTime() + 3 * DAY); rd.setHours(10, 0, 0, 0); while (!isWorkday(rd)) rd.setDate(rd.getDate() + 1);
+    const rs = e.sent - e.opens - e.unsub - e.bounce;
+    const ro = Math.round(rs * (0.068 + RE() * 0.022) * EF[i]);
+    const rc = Math.round(ro * (0.17 + RE() * 0.05) * CF[i]);
+    e.re = { date: rd, subject: reSubj(e.subject, ty), tpl: e.tpl + '-R', sent: rs, opens: ro, clicks: rc, unsub: Math.round(rs * (0.001 + RE() * 0.001)), bounce: Math.round(rs * 0.004) };
+    e.re.links = splitLinks(LINKSETS[ty], rc * (1.12 + RE() * 0.15), 0.35);
   });
   const RW = rng(4242);
   doctors.forEach(d => {
