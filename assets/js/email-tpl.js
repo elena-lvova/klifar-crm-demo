@@ -28,7 +28,7 @@
       case 'invite': { const w = webFor(e, true);
         return `<p class="em-lead">Приглашаем вас принять участие в онлайн-вебинаре, посвящённом теме <b>«${w.title}»</b>. Мероприятие пройдёт в рамках образовательного проекта <b>StopVertigo</b> для неврологов.</p>
           <div class="em-card"><div class="em-ck">${svg('video')}<span>Вебинар</span></div>
-          <div class="em-dl"><p><b>Дата:</b> ${d2(w.date)}</p><p><b>Время:</b> 19:00 (мск)</p><p><b>Эксперт:</b> ${w.speaker}</p></div>
+          <div class="em-dl"><p><b>Дата:</b> ${d2(w.date)}</p><p><b>Время:</b> ${w.time || '19:00'} (мск)</p><p><b>Эксперт:</b> ${w.speaker}</p></div>
           <p><b>В рамках вебинара будут рассмотрены:</b></p><ul>${(w.topics || []).map(x => `<li>${x}</li>`).join('')}</ul>${btn(L[0])}</div>
           <p class="em-note">Вы сможете задать вопросы эксперту во время эфира, а позднее на сайте проекта <b>StopVertigo</b> появится полная запись вебинара.</p>`; }
       case 'record': { const w = webFor(e, false);
@@ -48,10 +48,41 @@
       default: return `<p class="em-lead">Новый материал на сайте проекта <b>StopVertigo</b>.</p>${card(/^Обзор/.test(e.subject) ? 'review' : 'review', /^Обзор/.test(e.subject) ? 'Обзор' : 'Статья', t, '<p>Короткий практический материал для невролога амбулаторного звена — около 5 минут чтения. В конце — ключевые выводы для приёма и список литературы.</p>', L[0])}`;
     }
   }
+
+  // ---- шаблоны 1 и 2: оригинальные письма проекта «Жизнь без головокружения» (без упоминаний компании и препарата)
+  const JLOGO = `<span class="jb-logo"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"><path d="M21 20.5a3 3 0 1 1 3-3.2 7.5 7.5 0 1 1-7.8-6.6A12 12 0 1 1 8.6 27"/></svg><b>ЖИЗНЬ БЕЗ<br>ГОЛОВОКРУЖЕНИЯ</b></span>`;
+  const JI = {
+    video: '<svg viewBox="0 0 34 26" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"><rect x="2" y="3" width="21" height="20" rx="4"/><path d="m23 11 9-6v16l-9-6z"/></svg>',
+    quiz: '<svg viewBox="0 0 30 30" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"><path d="M3 9h6a3 3 0 1 1 6 0h6v6a3 3 0 1 1 0 6v6h-6a3 3 0 1 0-6 0H3v-6a3 3 0 1 0 0-6z"/></svg>',
+    review: '<svg viewBox="0 0 26 32" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2H6a4 4 0 0 0-4 4v20a4 4 0 0 0 4 4h14a4 4 0 0 0 4-4V9z"/><path d="M7 15h12M7 21h7"/><path d="m15 25 3 3 6-6" stroke-width="2.6"/></svg>',
+  };
+  const jbtn = (l, cls) => `<a class="jb-btn ${cls || ''}" ${CASE && l && l.path === 'case' ? `href="${root}case/index.html" target="_blank" rel="noopener"` : 'data-lk'} data-path="${l ? l.path : ''}">${(l ? l.name : 'Перейти на сайт').toUpperCase()}<svg viewBox="0 0 22 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h17M13 2l6 6-6 6"/></svg></a>`;
+  const jcert = L => `<div class="jb-cert"><div><p>Напоминаем, что в рамках данного обучающего проекта Вы сможете получить международный сертификат от <b>The Royal Australasian College of Physicians</b> — для этого необходимо изучать материалы проекта, за что Вам будут начисляться баллы.</p>${jbtn(L.find(l => l.path === '') || { name: 'Перейти на сайт', path: '' }, 'dk')}</div><img src="${root}assets/img/jbg-cert.png" alt=""></div>`;
+  const jframe = (hi, body, after) => `<div class="em-prev jb"><div class="jb-top" style="background-image:url(${root}assets/img/jbg-top.jpg)">${JLOGO}<p class="jb-hi">${hi}</p></div><div class="jb-green">${body}</div>${after}<div class="jb-foot"><u>Отписаться от рассылки</u><span>Материал предназначен для сотрудников здравоохранения</span></div></div>`;
+  const jrem = (m, e) => m.k === 1 ? `<p class="jb-rem">Несколько дней назад мы отправили вам это письмо — возможно, оно затерялось среди других. Напоминаем главное.</p>` : m.k === 2 ? `<p class="jb-rem">${e.type === 'invite' ? 'До вебинара осталось несколько дней — регистрация ещё открыта.' : 'Последнее напоминание: материалы остаются на сайте, к ним можно вернуться в любое время.'}</p>` : '';
+  function orig(e, m) {
+    const L = m.links;
+    if (e.n === 2) {
+      const w = W()[0] || {};
+      return jframe('Здравствуйте, *Имя Отчество*!', `${jrem(m, e)}<p>Приглашаем Вас принять участие в онлайн-вебинаре, посвященном теме <b>«${w.title}»</b>. Мероприятие пройдет в рамках международного образовательного проекта <b>«Жизнь без головокружения»</b>, который разработан совместно с одним из крупнейших мировых медицинских образовательных ресурсов — Royal Australasian College of Physicians.</p>
+        <div class="jb-card"><div class="jb-ck">${JI.video}<span>Вебинар</span></div>
+        <p><b>Дата:</b> <i>${w.date ? d2(w.date) : ''}</i></p><p><b>Время:</b> <i>${w.time || '16:00'} (мск)</i></p>
+        <p class="jb-exp"><b>Эксперт:</b> <i>${w.speakerFull || w.speaker}</i><br><i>${w.speakerInfo || ''}</i></p>
+        <p><b>В рамках вебинара будут рассмотрены:</b></p><ul>${(w.topics || []).map(x => `<li>${x}</li>`).join('')}</ul>
+        ${jbtn(L[0])}</div>
+        <p class="jb-note">Вы сможете задать свои вопросы эксперту во время встречи, а позднее на сайте проекта <b>«Жизнь без головокружения»</b> появится полная запись данного вебинара.</p>`, jcert(L));
+    }
+    return jframe('Уважаемый коллега!', `${jrem(m, e)}<p>На сайте международного образовательного проекта <b>«Жизнь без головокружения»</b> для изучения уже доступны первые материалы.</p>
+      <div class="jb-card"><div class="jb-ck">${JI.video}<span>Вебинар</span></div><p class="jb-t">«На приеме пациент с головокружением: программа действий»</p><p><b>Спикер:</b> Зайцева Ольга Владимировна<br><em>К.м.н., отоневролог, начальник НКО и заведующая отделением вестибулологии и отоневрологии ФГБУ «НМИЦО» ФМБА России, Москва</em></p>${jbtn(L[0])}</div>
+      <div class="jb-card"><div class="jb-ck">${JI.quiz}<span>Квиз</span></div><p class="jb-t">«Этиологические факторы и виды головокружения»</p><p>Знание классификации и причин патологии позволяет врачу поставить точный диагноз, выбрать оптимальную тактику лечения и снизить риск осложнений.</p><p><em>Проверьте свои знания с помощью интерактивного квиза, чтобы повысить качество ведения пациентов с головокружением.</em></p>${jbtn(L[1])}</div>
+      <div class="jb-card"><div class="jb-ck">${JI.review}<span>Обзор</span></div><p class="jb-t">«Ошибки при лечении головокружения»</p><p>Узнайте, какие наиболее распространенные ошибки возникают при терапии головокружения у пациентов и можно ли их избежать.</p>${jbtn(L[2])}</div>`,
+      `<div class="jb-info"><img src="${root}assets/img/jbg-knot.png" alt=""><p><b>Для лечения головокружения и неустойчивости целесообразно применять препараты с мультимодальным действием. Назначение лекарственных средств, влияющих на разные патогенетические звенья головокружения, позволяет начать лечение даже до установки окончательного диагноза.</b></p></div>${jcert(L)}`);
+  }
   function render(e, k) {
     const m = e.sends[k] || e.sends[0]; const L = m.links; CASE = e.type === 'welcome' || /нейронит/.test(e.subject);
+    if (e.n <= 2) return orig(e, m);
     const intro = m.k === 1 ? `<p class="em-lead">Несколько дней назад мы отправили вам письмо «${e.subject}». Возможно, оно затерялось среди других — коротко напоминаем главное.</p>`
-      : m.k === 2 ? (e.type === 'invite' ? '<p class="em-lead"><b>Вебинар начнётся сегодня в 19:00 по московскому времени.</b> Регистрация ещё открыта — ссылка на эфир придёт сразу после неё.</p>' : `<p class="em-lead">Последнее напоминание о материале «${e.subject}». Он останется на сайте проекта — к нему можно вернуться в любое время.</p>`) : '';
+      : m.k === 2 ? (e.type === 'invite' ? '<p class="em-lead"><b>До вебинара осталось несколько дней.</b> Регистрация ещё открыта — ссылка на эфир придёт сразу после неё.</p>' : `<p class="em-lead">Последнее напоминание о материале «${e.subject}». Он останется на сайте проекта — к нему можно вернуться в любое время.</p>`) : '';
     return `<div class="em-prev sv">
       <div class="em-top" style="background-image:url(${root}assets/img/swirl.jpg)">${LOGO}<p class="em-hi">${e.type === 'invite' || m.k ? 'Здравствуйте, <b>{{Имя Отчество}}</b>!' : 'Уважаемый коллега!'}</p></div>
       <div class="em-green">${intro}${cards(e, L)}</div>

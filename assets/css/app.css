@@ -165,11 +165,11 @@ th.sortable:hover{color:var(--blue)}
 .mini{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fafbfc}
 .mini .l{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .mini .v{font-weight:600;font-size:15px;margin-top:3px}
-.plan-bar{height:8px;border-radius:4px;background:#111827;position:relative;overflow:hidden}
+.plan-bar{height:8px;border-radius:4px;background:#e5e7eb;position:relative;overflow:hidden}
 .plan-bar i{position:absolute;left:0;top:0;bottom:0;background:#166534;border-radius:4px}
 .plan-leg{font-size:11.5px;color:var(--ink2);margin-top:4px;display:flex;gap:10px}
 .plan-leg span::before{content:'●';margin-right:3px;color:#166534}
-.plan-leg span+span::before{color:#111827}
+.plan-leg span+span::before{color:#d1d5db}
 
 /* recordings */
 .playb{width:26px;height:26px;border-radius:50%;border:0;background:#eef2f7;color:var(--blue);display:grid;place-items:center}
@@ -376,3 +376,23 @@ table.emrep tr.tot.sub td{font-weight:500;background:#fff;border-top:1px dashed 
 .sv .em-cert p{margin:0}.sv .em-cert-ic{flex:none;width:64px;height:64px;border-radius:50%;background:#e7f4ed;display:grid;place-items:center;color:#14875a}.sv .em-cert-ic svg{width:32px;height:32px}
 .sv .em-foot{background:#3a3a3f;color:#9a9aa3;text-align:center;padding:22px 20px 18px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px}
 .sv .em-foot .sv-logo{color:#3fbf86}.sv .em-foot span{letter-spacing:.14em;text-transform:uppercase;color:#e4e4e7;font-size:11px;margin-top:6px}
+/* оригинальные шаблоны проекта (письма 1–2) */
+.em-prev.jb{background:#e8e8e8;border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:600px;margin:0 auto;font:14px/1.45 Inter,Rubik,system-ui,sans-serif;color:#111}
+.jb .jb-top{background:#e8e8e8 right -70px top -60px/380px auto no-repeat;padding:44px 34px 36px}
+.jb-logo{display:inline-flex;align-items:center;gap:10px;color:#1b8a5a}.jb-logo svg{width:38px;height:38px}.jb-logo b{font-size:19px;line-height:1.02;font-weight:800;letter-spacing:.01em}
+.jb .jb-hi{margin:34px 0 0;font-weight:700;font-size:15px}
+.jb .jb-green{background:linear-gradient(180deg,#3c8e66 0%,#4f9c76 100%);border-radius:26px;padding:30px 30px 34px;color:#fff;margin-bottom:30px}
+.jb .jb-green>p{margin:0 0 4px;font-size:14.5px}.jb .jb-rem{background:rgba(255,255,255,.16);border-radius:12px;padding:10px 14px;margin-bottom:16px!important;font-weight:500}
+.jb .jb-card{border:2.5px solid rgba(255,255,255,.9);background:rgba(255,255,255,.2);border-radius:26px;padding:28px 30px 30px;margin:28px 0 0;color:#0b0b0b}
+.jb .jb-card p{margin:0 0 14px;font-size:13.5px}.jb .jb-card i{font-style:normal;color:#fff}.jb .jb-card em{font-style:italic;color:#1a2e24}
+.jb .jb-card ul{margin:-6px 0 0 18px;padding:0;font-size:13.5px}.jb .jb-card li{margin:2px 0}
+.jb .jb-ck{display:flex;align-items:center;gap:12px;margin-bottom:22px}.jb .jb-ck svg{width:32px;height:28px}.jb .jb-ck span{font-size:21px;font-weight:700;color:#0b0b0b}
+.jb .jb-t{font-weight:700}.jb .jb-exp{line-height:1.4}
+.jb .jb-note{margin:26px 0 0!important;font-weight:600;font-size:13px!important}
+.jb-btn{display:inline-flex;align-items:center;gap:22px;background:#fff;color:#0b0b0b!important;border-radius:999px;padding:16px 30px;font-weight:800;font-size:12.5px;letter-spacing:.02em;margin-top:22px;cursor:pointer;text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.jb-btn svg{width:20px;height:15px;color:#1b8a5a}.jb-btn.dk{background:#157a4c;color:#fff!important}.jb-btn.dk svg{color:#fff}
+.jb .jb-info,.jb .jb-cert{display:flex;gap:18px;align-items:center;margin:0 28px 30px;border:2px solid #2f8a5f;border-radius:26px;background:#fff;padding:26px 28px}
+.jb .jb-info img{width:150px;flex:none;margin:-14px 0}.jb .jb-info p{margin:0;font-size:13px}
+.jb .jb-cert p{margin:0;font-size:13px}.jb .jb-cert img{width:150px;flex:none;margin:-14px 0}
+.jb .jb-foot{background:#3a3a3f;text-align:center;padding:30px 20px 26px;display:flex;flex-direction:column;align-items:center;gap:16px;font-size:12px;color:#8d8d95}
+.jb .jb-foot span{letter-spacing:.16em;text-transform:uppercase;color:#f2f2f2;font-size:11.5px}
