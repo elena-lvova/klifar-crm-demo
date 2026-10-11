@@ -10,7 +10,10 @@
 <link rel="stylesheet" href="assets/css/app.css">
 </head>
 <body>
-<div id="app"></div>
+<div id="app"><div style="font-family:system-ui,sans-serif;color:#667085;display:flex;align-items:center;justify-content:center;height:100vh">Загрузка кабинета…</div></div>
+<script>
+window.addEventListener('error',function(e){var a=document.getElementById('app');if(a&&!a.querySelector('.hdr,.login'))a.innerHTML='<div style="font-family:system-ui,sans-serif;padding:40px;color:#344054">Не удалось загрузить кабинет. Обновите страницу (Ctrl+F5) или откройте её в Chrome, Edge или Яндекс Браузере.<br><small style="color:#98a2b3">'+(e.message||'')+'</small></div>';});
+</script>
 <script src="assets/vendor/chart.umd.min.js"></script>
 <script src="assets/js/audio-meta.js"></script>
 <script src="assets/js/data.js"></script>
