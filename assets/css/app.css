@@ -352,3 +352,6 @@ a.tpl:hover{text-decoration:underline}
 .em-cta{display:inline-block;background:#1d4ed8;color:#fff!important;padding:10px 20px;border-radius:8px;font-weight:600;margin:6px 0 12px;cursor:pointer}
 .em-links{display:flex;flex-direction:column;gap:6px}.em-links a{color:#1d4ed8;cursor:pointer}
 .em-ft{font-size:11px;color:#98a2b3;padding:0 22px 14px}
+table.emrep tr.em-m0 td{background:#f8faff;border-top:1px dashed #dbe4f5;font-size:13px}
+table.emrep tr.em-s td:nth-child(3){padding-left:22px}
+table.emrep tr.tot.sub td{font-weight:500;background:#fff;border-top:1px dashed var(--line);font-size:13px}

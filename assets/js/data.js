@@ -318,19 +318,31 @@
     const out = set.map((l, j) => ({ name: l[0], path: l[1], clicks: Math.round(total * w[j] / sw) }));
     return out;
   };
+  const reSubj2 = (t, ty) => ty === 'invite' ? 'Сегодня в 19:00: ' + t.replace('Приглашение на вебинар', 'вебинар') : 'Последнее напоминание: ' + t.replace('Клинический разбор: ', 'клинический разбор — ');
+  // e.opens / e.clicks — уникальные врачи по письму в целом (основная отправка + повторы)
   EMAILS.forEach((e, i) => {
     const ty = emType(e.subject); e.type = ty;
     e.tpl = 'SV-EM-' + String(e.n).padStart(2, '0');
     e.camp = 'sv-em-' + String(e.n).padStart(2, '0');
-    e.unsub = Math.round(e.sent * (0.0008 + RE() * 0.0009));
-    e.bounce = Math.round(e.sent * (0.006 + RE() * 0.005));
-    e.links = splitLinks(LINKSETS[ty], e.clicks * (1.18 + RE() * 0.17), 0.25);
-    const rd = new Date(e.date.getTime() + 3 * DAY); rd.setHours(10, 0, 0, 0); while (!isWorkday(rd)) rd.setDate(rd.getDate() + 1);
-    const rs = e.sent - e.opens - e.unsub - e.bounce;
-    const ro = Math.round(rs * (0.068 + RE() * 0.022) * EF[i]);
-    const rc = Math.round(ro * (0.17 + RE() * 0.05) * CF[i]);
-    e.re = { date: rd, subject: reSubj(e.subject, ty), tpl: e.tpl + '-R', sent: rs, opens: ro, clicks: rc, unsub: Math.round(rs * (0.001 + RE() * 0.001)), bounce: Math.round(rs * 0.004) };
-    e.re.links = splitLinks(LINKSETS[ty], rc * (1.12 + RE() * 0.15), 0.35);
+    const nRep = (ty === 'invite' || ty === 'case') ? 2 : 1;
+    // доли открытий по отправкам: ≈ 9% / 4% / 2% от базы
+    let sh = nRep === 2 ? [0.60, 0.27, 0.13] : [0.635, 0.365];
+    sh = sh.map(x => x * (1 + (RE() - 0.5) * 0.12)); const ss = sh.reduce((a, b) => a + b, 0); sh = sh.map(x => x / ss);
+    let ch = sh.map((x, k) => x * [1.06, 0.95, 0.88][k]); const cs = ch.reduce((a, b) => a + b, 0); ch = ch.map(x => x / cs);
+    const opens = sh.map(x => Math.round(e.opens * x)); opens[0] = e.opens - opens.slice(1).reduce((a, b) => a + b, 0);
+    const clicks = ch.map(x => Math.round(e.clicks * x)); clicks[0] = e.clicks - clicks.slice(1).reduce((a, b) => a + b, 0);
+    e.sends = []; let base = e.sent, d0 = e.date;
+    for (let k = 0; k <= nRep; k++) {
+      let date = d0;
+      if (k > 0) { date = new Date(d0.getTime() + 3 * DAY); date.setHours(10, 0, 0, 0); while (!isWorkday(date)) date.setDate(date.getDate() + 1); }
+      const bounce = Math.round(base * (k === 0 ? 0.006 + RE() * 0.005 : 0.004)), unsub = Math.round(base * (0.0008 + RE() * 0.0009));
+      const snd = { k, label: k === 0 ? 'Основная отправка' : 'Повтор ' + k, date, subject: k === 0 ? e.subject : k === 1 ? reSubj(e.subject, ty) : reSubj2(e.subject, ty),
+        tpl: e.tpl + (k ? '-R' + k : ''), sent: base, opens: opens[k], clicks: clicks[k], bounce, unsub };
+      snd.links = splitLinks(LINKSETS[ty], snd.clicks * (1.15 + RE() * 0.17), 0.3);
+      e.sends.push(snd);
+      base = base - snd.opens - bounce - unsub; d0 = date;
+    }
+    e.bounce = e.sends.reduce((a, x) => a + x.bounce, 0); e.unsub = e.sends.reduce((a, x) => a + x.unsub, 0);
   });
   const RW = rng(4242);
   doctors.forEach(d => {

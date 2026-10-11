@@ -31,20 +31,20 @@ body{background:#eef1f5;margin:0}
   const t2 = d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   const top = `<div class="tp-top"><img src="../assets/logo.png" alt="Клифар CRM"><span class="sp"></span><span class="tag">Демо · StopVertigo 2025</span></div>`;
   const code = new URLSearchParams(location.search).get('t');
-  const all = []; DB.EMAILS.forEach(e => { all.push([e, false]); all.push([e, true]); });
-  const hit = all.find(([e, r]) => (r ? e.re.tpl : e.tpl) === code);
+  const all = []; DB.EMAILS.forEach(e => e.sends.forEach(m => all.push([e, m.k])));
+  const hit = all.find(([e, k]) => e.sends[k].tpl === code);
   if (!hit) {
-    el.innerHTML = top + `<div class="tp-card"><h1>Шаблоны писем проекта StopVertigo</h1><div class="muted" style="font-size:13px;margin-bottom:10px">24 рассылки и повторные отправки тем, кто не открыл письмо</div><div class="tp-list">${all.map(([e, r]) => { const m = r ? e.re : e; return `<a href="?t=${m.tpl}"><span class="num">${m.tpl}</span><b style="font-weight:${r ? 400 : 600}">${m.subject}</b></a>`; }).join('')}</div></div>`;
+    el.innerHTML = top + `<div class="tp-card"><h1>Шаблоны писем проекта StopVertigo</h1><div class="muted" style="font-size:13px;margin-bottom:10px">24 рассылки, повторы для не открывших и вторые повторы</div><div class="tp-list">${all.map(([e, k]) => { const m = e.sends[k]; return `<a href="?t=${m.tpl}"><span class="num">${m.tpl}</span><b style="font-weight:${k ? 400 : 600}">${m.subject}</b></a>`; }).join('')}</div></div>`;
     document.title = 'Шаблоны писем · StopVertigo'; return;
   }
-  const [e, r] = hit; const m = r ? e.re : e;
+  const [e, k] = hit; const m = e.sends[k]; const r = k > 0;
   document.title = m.tpl + ' · ' + m.subject;
   const i = all.indexOf(hit), prev = all[i - 1], next = all[i + 1];
-  const tc = x => x ? (x[1] ? x[0].re.tpl : x[0].tpl) : '';
+  const tc = x => x ? x[0].sends[x[1]].tpl : '';
   el.innerHTML = top + `<div class="tp-card">
-    <h1>Шаблон ${m.tpl}${r ? ' · повтор' : ''}</h1>
-    <div class="em-meta" style="margin-top:10px"><div><span>От</span><b>Проект StopVertigo &lt;info@stopvertigo.ru&gt;</b></div><div><span>Тема</span><b>${m.subject}</b></div><div><span>Прехедер</span>${EMAIL_TPL.pre(r)}</div><div><span>Отправка</span>${d2(m.date)} в ${t2(m.date)} · ${fmt(m.sent)} получателей${r ? ' · не открывшие основное письмо' : ''}</div></div>
-    ${EMAIL_TPL.render(e, r)}
+    <h1>Шаблон ${m.tpl}${r ? ' · ' + m.label.toLowerCase() : ''}</h1>
+    <div class="em-meta" style="margin-top:10px"><div><span>От</span><b>Проект StopVertigo &lt;info@stopvertigo.ru&gt;</b></div><div><span>Тема</span><b>${m.subject}</b></div><div><span>Прехедер</span>${EMAIL_TPL.pre(k)}</div><div><span>Отправка</span>${d2(m.date)} в ${t2(m.date)} · ${fmt(m.sent)} получателей${m.k === 2 ? ' · не открывшие ни основное письмо, ни повтор 1' : m.k === 1 ? ' · не открывшие основное письмо' : ''}</div></div>
+    ${EMAIL_TPL.render(e, k)}
     <div class="tp-nav">${prev ? `<a href="?t=${tc(prev)}">← ${tc(prev)}</a>` : ''}<span style="flex:1"></span><a href="index.html">Все шаблоны</a><span style="flex:1"></span>${next ? `<a href="?t=${tc(next)}">${tc(next)} →</a>` : ''}</div>
   </div>`;
   el.querySelectorAll('[data-lk]').forEach(a => a.addEventListener('click', ev => ev.preventDefault()));
