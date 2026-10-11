@@ -847,7 +847,7 @@
       const row = (e, r) => { const m = r ? e.re : e; const open = S.chan.open === e.n;
         return `<tr class="click ${r ? 'em-re' : 'em-main'} ${open && !r ? 'exp' : ''}" data-emrow="${e.n}">
           <td class="muted">${r ? '' : e.n}</td><td class="num">${dstr(m.date)}${r ? `<div class="muted" style="font-size:12px">${tstr(m.date)}</div>` : ''}</td>
-          <td>${r ? `<span class="tag amber" style="margin-bottom:3px">${ic('sync', 'sm')}Догонялка · не открывшим</span><div style="font-size:13px">${m.subject}</div>` : `<div style="font-weight:500">${m.subject}</div>`}</td>
+          <td>${r ? `<span class="tag amber" style="margin-bottom:3px">${ic('sync', 'sm')}Повтор · не открывшим</span><div style="font-size:13px">${m.subject}</div>` : `<div style="font-weight:500">${m.subject}</div>`}</td>
           <td><a class="tpl" href="#" data-tpl="${e.n}" data-tre="${r ? 1 : 0}">${ic('file', 'sm')}${m.tpl}</a></td>
           <td class="r num">${fmt(m.sent)}</td><td class="r num">${fmt(m.opens)}</td><td class="r num"><b>${pct(m.opens / m.sent)}</b></td>
           <td class="r num">${fmt(m.clicks)}</td><td class="r num">${pct(m.clicks / m.sent)}</td><td class="r num">${pct(m.clicks / m.opens)}</td>
@@ -856,28 +856,28 @@
         const reach = e.opens + e.re.opens, reachC = e.clicks + e.re.clicks;
         return `<tr class="em-det"><td></td><td colspan="10"><div class="em-box">
           <div class="grid g4" style="gap:8px">
-            <div class="mini"><div class="l">Открыли письмо всего</div><div class="v num">${fmt(reach)}</div><div class="muted" style="font-size:12px">${pct(reach / e.sent)} от отправленных · догонялка +${pct(e.re.opens / e.sent)}</div></div>
+            <div class="mini"><div class="l">Открыли письмо всего</div><div class="v num">${fmt(reach)}</div><div class="muted" style="font-size:12px">${pct(reach / e.sent)} от отправленных · повтор +${pct(e.re.opens / e.sent)}</div></div>
             <div class="mini"><div class="l">Перешли всего</div><div class="v num">${fmt(reachC)}</div><div class="muted" style="font-size:12px">${pct(reachC / e.sent)} от отправленных</div></div>
             <div class="mini"><div class="l">Недоставлено</div><div class="v num">${fmt(e.bounce + e.re.bounce)}</div><div class="muted" style="font-size:12px">${pct((e.bounce) / e.sent)} основной рассылки</div></div>
-            <div class="mini"><div class="l">Отписки</div><div class="v num">${fmt(e.unsub + e.re.unsub)}</div><div class="muted" style="font-size:12px">основная ${e.unsub} · догонялка ${e.re.unsub}</div></div>
+            <div class="mini"><div class="l">Отписки</div><div class="v num">${fmt(e.unsub + e.re.unsub)}</div><div class="muted" style="font-size:12px">основная ${e.unsub} · повтор ${e.re.unsub}</div></div>
           </div>
-          <table class="links" style="margin-top:10px"><thead><tr><th>Ссылка в письме</th><th>Адрес</th><th class="r">Основная рассылка</th><th class="r">Догонялка</th><th class="r">Всего переходов</th><th style="width:22%">Доля</th></tr></thead><tbody>
+          <table class="links" style="margin-top:10px"><thead><tr><th>Ссылка в письме</th><th>Адрес</th><th class="r">Основная рассылка</th><th class="r">Повтор</th><th class="r">Всего переходов</th><th style="width:22%">Доля</th></tr></thead><tbody>
           ${L.map(l => { const t = l.clicks + l.rc, all = lt(e.links) + lt(e.re.links); return `<tr><td style="font-weight:500">${l.name}</td><td class="muted url">stopvertigo.ru/${l.path}?utm_campaign=${e.camp}</td><td class="r num">${fmt(l.clicks)}</td><td class="r num">${fmt(l.rc)}</td><td class="r num"><b>${fmt(t)}</b></td><td><div class="prog" style="background:#eef1f5"><i style="width:${t / all * 100}%;background:#2f6bea"></i></div><span class="muted num" style="font-size:12px">${pct(t / all, 0)}</span></td></tr>`; }).join('')}
           <tr class="tot"><td>Итого кликов</td><td class="muted">уникальных кликнувших: ${fmt(e.clicks)} + ${fmt(e.re.clicks)}</td><td class="r num">${fmt(lt(e.links))}</td><td class="r num">${fmt(lt(e.re.links))}</td><td class="r num"><b>${fmt(lt(e.links) + lt(e.re.links))}</b></td><td></td></tr></tbody></table>
-          <div class="row-flex" style="margin-top:10px;gap:8px"><button class="btn sm out" data-tpl="${e.n}" data-tre="0">${ic('mail', 'sm')}Шаблон письма</button><button class="btn sm out" data-tpl="${e.n}" data-tre="1">${ic('sync', 'sm')}Шаблон догонялки</button><span class="sp"></span><span class="muted" style="font-size:12px">Догонялка отправлена ${dstr(e.re.date)} в ${tstr(e.re.date)} тем, кто не открыл письмо за 3 дня (без отписавшихся и недоставленных)</span></div>
+          <div class="row-flex" style="margin-top:10px;gap:8px"><button class="btn sm out" data-tpl="${e.n}" data-tre="0">${ic('mail', 'sm')}Шаблон письма</button><button class="btn sm out" data-tpl="${e.n}" data-tre="1">${ic('sync', 'sm')}Шаблон повтора</button><span class="sp"></span><span class="muted" style="font-size:12px">Повтор отправлен ${dstr(e.re.date)} в ${tstr(e.re.date)} тем, кто не открыл письмо за 3 дня (без отписавшихся и недоставленных)</span></div>
         </div></td></tr>`; };
-      body = `<div class="grid g4">${[['Отправлено писем', fmt(sent), '24 рассылки · без догонялок', 'mail', 'c-amber'], ['Open rate', pct(op / sent), `${fmt(op)} открытий`, 'chart', 'c-blue'], ['CTR', pct(cl / sent), `${fmt(cl)} переходов`, 'link', 'c-teal'], ['CTOR', pct(cl / op), 'переходы от открытий', 'star', 'c-violet']].map(k => `<div class="card kpi compact" style="cursor:default"><div class="k-t">${k[0]}</div><div class="badge-ic ${k[4]}">${ic(k[3], 'lg')}</div><div class="k-v num">${k[1]}</div><div class="k-f">${k[2]}</div></div>`).join('')}</div>
-      <div class="card mt re-strip"><div class="badge-ic c-amber">${ic('sync', 'lg')}</div><div><b>Догонялки тем, кто не открыл</b><small>через 3 дня после основной рассылки, с другой темой письма</small></div>
+      body = `<div class="grid g4">${[['Отправлено писем', fmt(sent), '24 рассылки · без повторов', 'mail', 'c-amber'], ['Open rate', pct(op / sent), `${fmt(op)} открытий`, 'chart', 'c-blue'], ['CTR', pct(cl / sent), `${fmt(cl)} переходов`, 'link', 'c-teal'], ['CTOR', pct(cl / op), 'переходы от открытий', 'star', 'c-violet']].map(k => `<div class="card kpi compact" style="cursor:default"><div class="k-t">${k[0]}</div><div class="badge-ic ${k[4]}">${ic(k[3], 'lg')}</div><div class="k-v num">${k[1]}</div><div class="k-f">${k[2]}</div></div>`).join('')}</div>
+      <div class="card mt re-strip"><div class="badge-ic c-amber">${ic('sync', 'lg')}</div><div><b>Повторная отправка тем, кто не открыл</b><small>через 3 дня после основной рассылки, с другой темой письма</small></div>
         <div class="re-k"><span>Отправлено</span><b class="num">${fmt(rs)}</b></div><div class="re-k"><span>OR</span><b class="num">${pct(ro / rs)}</b></div><div class="re-k"><span>CTR</span><b class="num">${pct(rc / rs)}</b></div><div class="re-k"><span>CTOR</span><b class="num">${pct(rc / ro)}</b></div>
-        <div class="re-k hl"><span>Охват открытий с догонялками</span><b class="num">${pct(op / sent)} → ${pct((op + ro) / sent)}</b></div></div>
+        <div class="re-k hl"><span>Охват открытий с повтором</span><b class="num">${pct(op / sent)} → ${pct((op + ro) / sent)}</b></div></div>
       <div class="card mt"><h3>Open rate и CTR по рассылкам</h3><div style="height:220px;margin-top:8px"><canvas id="chEm"></canvas></div></div>
       <div class="card mt"><div class="row-flex"><div><h3>Отчёт по рассылкам</h3><div class="sub">Нажмите на рассылку, чтобы увидеть переходы по каждой ссылке</div></div><span class="sp"></span>
-        <label class="chk"><input type="checkbox" id="emRe" ${showRe ? 'checked' : ''}> Показывать догонялки</label>
+        <label class="chk"><input type="checkbox" id="emRe" ${showRe ? 'checked' : ''}> Показывать повторы</label>
         <button class="btn sm out" id="emCsv">${ic('dl', 'sm')}Выгрузить CSV</button></div>
         <table class="emrep" style="margin-top:10px"><thead><tr><th>№</th><th>Дата</th><th>Тема письма</th><th>Шаблон</th><th class="r">Отправлено</th><th class="r">Открыто</th><th class="r">OR</th><th class="r">Переходы</th><th class="r">CTR</th><th class="r">CTOR</th><th></th></tr></thead><tbody>
         ${E.slice().reverse().map(e => row(e, false) + (showRe ? row(e, true) : '') + (S.chan.open === e.n ? detail(e) : '')).join('')}
         <tr class="tot"><td></td><td colspan="3">Итого основные рассылки</td><td class="r num">${fmt(sent)}</td><td class="r num">${fmt(op)}</td><td class="r num">${pct(op / sent)}</td><td class="r num">${fmt(cl)}</td><td class="r num">${pct(cl / sent)}</td><td class="r num">${pct(cl / op)}</td><td></td></tr>
-        ${showRe ? `<tr class="tot"><td></td><td colspan="3">Итого догонялки</td><td class="r num">${fmt(rs)}</td><td class="r num">${fmt(ro)}</td><td class="r num">${pct(ro / rs)}</td><td class="r num">${fmt(rc)}</td><td class="r num">${pct(rc / rs)}</td><td class="r num">${pct(rc / ro)}</td><td></td></tr>` : ''}
+        ${showRe ? `<tr class="tot"><td></td><td colspan="3">Итого повторы</td><td class="r num">${fmt(rs)}</td><td class="r num">${fmt(ro)}</td><td class="r num">${pct(ro / rs)}</td><td class="r num">${fmt(rc)}</td><td class="r num">${pct(rc / rs)}</td><td class="r num">${pct(rc / ro)}</td><td></td></tr>` : ''}
         </tbody></table>
         <div class="muted" style="font-size:12px;margin-top:10px">Открыто и переходы — уникальные врачи. OR = открыто / отправлено, CTR = переходы / отправлено, CTOR = переходы / открыто. В детализации по ссылкам — все клики, один врач может перейти по нескольким ссылкам.</div></div>`;
     }
@@ -910,42 +910,21 @@
   // ======================================================================
   // REPORTS
   // ======================================================================
-  // ---------- шаблон письма ----------
-  const EM_BODY = {
-    invite: e => [`Приглашаем вас на онлайн-вебинар проекта StopVertigo. Эфир пройдёт в 19:00 по московскому времени, продолжительность около часа.`, `В программе: разбор клинических ситуаций, алгоритм осмотра пациента с головокружением и ответы на вопросы из чата. Запись будет доступна на сайте проекта всем зарегистрированным участникам.`],
-    record: e => [`Запись эфира уже доступна на сайте проекта. Её можно посмотреть в удобное время — целиком или по главам.`, `К записи приложены презентация спикера и ответы на вопросы, которые не успели разобрать в эфире.`],
-    case: e => [`Новый клинический разбор в формате «шаг за шагом»: жалобы, осмотр, дифференциальный диагноз и тактика ведения.`, `На каждом этапе можно выбрать своё решение и сравнить его с комментарием эксперта. Прохождение занимает около 10 минут.`],
-    video: e => [`Короткое видео с пошаговым выполнением техники и типичными ошибками. Длительность — около 6 минут.`, `Для пациента подготовлена памятка, которую удобно распечатать и отдать на приёме.`],
-    memo: e => [`Готовый материал для работы на приёме: его можно скачать, распечатать и использовать с пациентами.`, `Все памятки и шкалы проекта собраны в одном разделе сайта.`],
-    article: e => [`Короткий практический материал для невролога амбулаторного звена — время чтения около 5 минут.`, `В конце статьи — ключевые выводы для приёма и список литературы.`],
-    digest: e => [`Собрали в одном письме главное за год в проекте StopVertigo: записи вебинаров, клинические разборы и материалы для пациентов.`, `Спасибо, что были с нами. Все материалы остаются доступными на сайте проекта.`],
-  };
   function emailPreview(e, isRe) {
     const m = isRe ? e.re : e; const L = (isRe ? e.re.links : e.links);
-    const pre = isRe ? 'Вы не открыли наше письмо — коротко напоминаем, что внутри.' : 'Материалы для практикующего невролога · проект StopVertigo';
-    const [p1, p2] = EM_BODY[e.type](e);
+    const pre = EMAIL_TPL.pre(isRe);
     modal(`<div class="mh"><h3>${ic('mail')} Шаблон ${m.tpl}</h3><button class="btn sm ghost" data-close>${ic('x', 'sm')}</button></div>
       <div class="mb">
         <div class="em-meta"><div><span>От</span><b>Проект StopVertigo &lt;info@stopvertigo.ru&gt;</b></div><div><span>Тема</span><b>${m.subject}</b></div><div><span>Прехедер</span>${pre}</div><div><span>Отправка</span>${dstr(m.date)} в ${tstr(m.date)} · ${fmt(m.sent)} получателей${isRe ? ' · не открывшие основное письмо' : ''}</div></div>
-        <div class="em-prev">
-          <div class="em-hd"><b>StopVertigo</b><span>образовательный проект для неврологов</span></div>
-          <div class="em-bd">
-            <p>Здравствуйте, {{Имя Отчество}}!</p>
-            ${isRe ? `<p>Несколько дней назад мы отправили вам письмо «${e.subject}». Возможно, оно затерялось среди других — продублируем главное.</p>` : ''}
-            <h2>${e.subject}</h2><p>${p1}</p><p>${p2}</p>
-            <a class="em-cta" data-lk>${L[0].name}</a>
-            <div class="em-links">${L.slice(1).map(l => `<a data-lk>${l.name} →</a>`).join('')}</div>
-          </div>
-          <div class="em-ft">Вы получили это письмо, так как дали согласие на получение информационных рассылок проекта StopVertigo. <u>Отписаться</u> · <u>Политика конфиденциальности</u></div>
-        </div>
+        ${EMAIL_TPL.render(e, isRe)}
         <div class="muted" style="font-size:12px;margin-top:8px">Переходы по ссылкам: ${L.map(l => `${l.name} — ${fmt(l.clicks)}`).join(' · ')}</div>
       </div>
-      <div class="mf"><button class="btn sm out" data-close>Закрыть</button></div>`, bg => { bg.querySelectorAll('[data-lk]').forEach(a => a.addEventListener('click', ev => ev.preventDefault())); }, 'wide');
+      <div class="mf"><a class="btn sm out" href="templates/index.html?t=${m.tpl}" target="_blank" rel="noopener">${ic('link', 'sm')}Открыть в отдельной вкладке</a><button class="btn sm out" data-close>Закрыть</button></div>`, bg => { bg.querySelectorAll('[data-lk]').forEach(a => a.addEventListener('click', ev => ev.preventDefault())); }, 'wide');
   }
 
   const REPORTS = [
     ['sum', 'Сводный отчёт по проекту', 'KPI по каналам, воронка вовлечения, промоплан — помесячно', 'chart', 'c-blue'],
-    ['email', 'Отчёт по рассылкам', 'Каждая рассылка и догонялка: дата, тема, шаблон, отправлено, OR, CTR, CTOR, переходы по каждой ссылке', 'mail', 'c-amber'],
+    ['email', 'Отчёт по рассылкам', 'Каждая рассылка и её повтор: дата, тема, шаблон, отправлено, OR, CTR, CTOR, переходы по каждой ссылке', 'mail', 'c-amber'],
     ['vis', 'Визиты и опросы', 'Все визиты с результатом, длительностью, номером записи и ответами на опрос', 'phone', 'c-amber'],
     ['cons', 'Врачи с согласием на передачу контактов', 'Для загрузки в CRM клиента: ФИО, место работы, город, IQKey, рабочий телефон', 'shield', 'c-green'],
     ['match', 'Сопоставление с CRM клиента', 'IQKey ↔ ID в CRM клиента, статус совпадения, дата синхронизации', 'link', 'c-violet'],
@@ -960,7 +939,7 @@
     if (k === 'match') { const r = [['IQKey ID', 'ID Клифар CRM', 'Врач', 'ID в CRM клиента', 'Статус', 'Дата сопоставления']]; D.filter(d => d.consentTransfer).forEach(d => r.push([d.iq, d.id, d.fio, d.crm || '', d.crm ? 'Совпадение подтверждено' : 'Ожидает сопоставления', d.crm ? dstr(d.crmDate) : ''])); return r; }
     if (k === 'core') { const r = [['ID', 'Врач', 'Город', 'Сегмент', 'Визиты', 'Вебинары', 'Материалы', 'Баллы']]; D.filter(d => d.quality >= 5).sort((a, b) => b.score - a.score).forEach(d => r.push([d.id, d.fio, d.city, d.seg, d.nVisits, d.nWeb, d.nMats, String(d.score).replace('.', ',')])); return r; }
     if (k === 'email') { const p = x => (x * 100).toFixed(1).replace('.', ','); const r = [['Тип строки', '№', 'Дата', 'Тема письма', 'Шаблон', 'Ссылка', 'Адрес ссылки', 'Отправлено', 'Открыто', 'OR, %', 'Переходы (уникальные)', 'CTR, %', 'CTOR, %', 'Клики по ссылке']];
-      DB.EMAILS.forEach(e => { [[e, 'Рассылка'], [e.re, 'Догонялка']].forEach(([m, t]) => { r.push([t, e.n, dstr(m.date) + ' ' + tstr(m.date), m.subject, m.tpl, '', '', m.sent, m.opens, p(m.opens / m.sent), m.clicks, p(m.clicks / m.sent), p(m.clicks / m.opens), '']); m.links.forEach(l => r.push(['Ссылка · ' + t.toLowerCase(), e.n, dstr(m.date), m.subject, m.tpl, l.name, `https://stopvertigo.ru/${l.path}?utm_source=email&utm_campaign=${e.camp}${t === 'Догонялка' ? '-r' : ''}`, '', '', '', '', '', '', l.clicks])); }); });
+      DB.EMAILS.forEach(e => { [[e, 'Рассылка'], [e.re, 'Повтор']].forEach(([m, t]) => { r.push([t, e.n, dstr(m.date) + ' ' + tstr(m.date), m.subject, m.tpl, '', '', m.sent, m.opens, p(m.opens / m.sent), m.clicks, p(m.clicks / m.sent), p(m.clicks / m.opens), '']); m.links.forEach(l => r.push(['Ссылка · ' + t.toLowerCase(), e.n, dstr(m.date), m.subject, m.tpl, l.name, `https://stopvertigo.ru/${l.path}?utm_source=email&utm_campaign=${e.camp}${t === 'Повтор' ? '-r' : ''}`, '', '', '', '', '', '', l.clicks])); }); });
       return r; }
     if (k === 'geo') { const r = [['Город', 'Регион', 'Целевые врачи', 'Хотя бы 1 контакт', 'Качественный контакт', 'Ядро', 'Охват, %']]; DB.CITIES.forEach(c => { const ds = D.filter(d => d.city === c); r.push([c, DB.cityRegion[c], ds.length, ds.filter(d => d.anyContact).length, ds.filter(d => d.quality >= 1).length, ds.filter(d => d.quality >= 5).length, (ds.filter(d => d.quality >= 1).length / ds.length * 100).toFixed(1).replace('.', ',')]); }); return r; }
   }
