@@ -280,6 +280,7 @@
   EMAILS[20].date = new Date(2025, 10, 13, 8, 0);
   const EF = [1.08, 1.12, 1.18, 0.96, 1.04, 1.1, 0.92, 0.98, 1.15, 1.02, 0.9, 0.94, 0.86, 0.9, 0.97, 1.06, 1.19, 1.0, 1.05, 1.08, 1.21, 1.03, 0.88, 0.95];
   const CF = [1.0, 1.2, 1.35, 0.9, 1.05, 1.15, 1.1, 0.95, 1.3, 1.0, 0.95, 0.9, 0.85, 1.1, 1.0, 1.05, 1.4, 0.95, 1.1, 1.2, 1.45, 1.15, 0.8, 0.9];
+  const OR_K = 0.853; // калибровка: OR по проекту ≈ 14,8%
   const emailDocs = doctors.filter(d => d.consentMail || R() < 0.42);
   emailDocs.forEach(d => {
     d.consentMail = true; d.consentPD = true;
@@ -287,16 +288,24 @@
     d.emailWaves = [];
     for (let i = startWave; i < 24; i++) {
       const e = EMAILS[i]; e.sent++; d.emailsSent++;
-      const o = R() < (0.09 + d.prop * 0.17) * EF[i]; let c = false;
-      if (o) { e.opens++; d.opens++; c = R() < 0.235 * CF[i]; if (c) { e.clicks++; d.clicks++; } }
+      const pO = (0.09 + d.prop * 0.17) * EF[i]; const u = R();
+      const o0 = u < pO, o = u < pO * OR_K; let c = false;
+      if (o0) { const cu = R(); if (!o) continue; e.opens++; d.opens++; c = cu < 0.235 * CF[i]; if (c) { e.clicks++; d.clicks++; } }
       if (o) d.emailWaves.push([i, c ? 2 : 1]);
     }
   });
+  const RW = rng(4242);
   doctors.forEach(d => {
+    d.webRec = [0, 0, 0, 0];
     // вебинары
     WEBINARS.forEach((w, i) => {
       const p = (d.cohort ? 0.08 : 0.03) * (0.4 + d.prop * 1.6) * (i === 3 ? 1.15 : 1);
-      if (R() < p) { d.webinars[i] = 1; d.webMin[i] = Math.round(Math.min(w.dur, 20 + R() * (w.dur - 10) + 10)); }
+      if (R() < p) {
+        d.webinars[i] = 1; R();
+        // участие = эфир или просмотр записи на лендинге
+        const rec = RW() < 0.38; d.webRec[i] = rec ? 1 : 0;
+        d.webMin[i] = rec ? Math.round(Math.min(w.dur, 9 + RW() * RW() * 46)) : Math.round(Math.min(w.dur, 13.3 + RW() * w.dur * 0.64));
+      }
     });
     // лендинг
     const base = (d.cohort ? 0.5 : d.consentMail ? 0.42 : 0.2) * (0.5 + d.prop);
@@ -312,7 +321,7 @@
     if (d.consentPD && !d.joined) d.joined = new Date(2025, Math.floor(R() * 11), 1 + Math.floor(R() * 27));
   });
   // Белова — как на макете
-  Object.assign(bel, { webinars: [0, 1, 1, 1], webMin: [0, 44, 45, 52], landing: 11, mats: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm8'], downloads: 2, emailsSent: 14, opens: 9, clicks: 5, consentMail: true, consentMsg: false });
+  Object.assign(bel, { webinars: [0, 1, 1, 1], webMin: [0, 24, 33, 52], webRec: [0, 1, 0, 0], landing: 11, mats: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm8'], downloads: 2, emailsSent: 14, opens: 9, clicks: 5, consentMail: true, consentMsg: false });
   bel.emailWaves = [[10, 1], [12, 2], [13, 1], [15, 1], [16, 2], [17, 1], [18, 2], [19, 2], [20, 2]];
 
   // CRM клиента: сопоставление для врачей с согласием на передачу
